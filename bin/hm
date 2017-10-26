@@ -1,0 +1,105 @@
+#!/usr/bin/env zsh
+
+PREFIX="$HOME/"${HM_HOME:-.home-manager}
+
+
+# colors
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+function wait-any-key {
+    echo 'Press any key to continue...'; read -k1 -s
+    echo ""
+}
+
+function quit-with-help {
+    cat << EOF
+usage: hm <command> <env>
+
+Commands:
+build  - build env to ./result/
+switch - build env to ~/
+
+Environments:
+Loads ~/.config/nixpkgs/envs/<env>.nix
+
+EOF
+
+    exit 0
+}
+
+function renderExamples {
+    mkdir -p "$PREFIX/envs"
+    mkdir -p "$PREFIX/hello"
+
+    if [ ! -f "$PREFIX/envs/example.nix" ]; then
+        cat @example@/envs/example.nix > "$PREFIX/envs/example.nix"
+    fi
+
+    if [ ! -f "$PREFIX/hello/default.nix" ]; then
+        cat @example@/hello/default.nix > "$PREFIX/hello/default.nix"
+    fi
+
+    if [ ! -f "$PREFIX/hello/hello.conf" ]; then
+        cat @example@/hello/hello.conf > "$PREFIX/hello/hello.conf"
+    fi
+}
+
+function bootstrap {
+    # install home-manager
+    nix-env -iA home-manager -f https://github.com/rycee/home-manager/archive/master.tar.gz
+
+    if hash home-manager ; then
+        renderExamples
+        echo "\nBootstrap successful!"
+    else
+        echo "Hmm, home-manager binary can't be found..."
+        echo "Bootstrap likely failed somehow. Aborting!"
+    fi
+    exit 0
+}
+
+function execute {
+    # No argument, show help
+    if [[ $# -ne 1 ]] ; then
+        quit-with-help;
+    fi
+
+    local envfile="$PREFIX/envs/$1.nix"
+
+    # envfile doesn't exist, complain
+    if [ ! -e $envfile ]; then
+        echo "Envfile not found: $envfile"
+        exit 0
+    fi
+
+    # plugin support
+    export NIX_PATH="plugins=$PREFIX/plugins.nix:$NIX_PATH";
+
+    # pull in user's secrets
+    source ~/.secrets
+
+    echo "EnvFile: $envfile"
+    echo "Command: $command"
+    home-manager -f $envfile $command
+}
+
+hash home-manager || {
+    echo "Home-manager was not found. It will now be installed."
+    wait-any-key
+    bootstrap
+}
+
+# no arguments, show help
+if [[ $# -eq 0 ]] ; then
+    quit-with-help
+fi
+
+local command="$1"; shift
+
+case "$command" in
+    build)  execute "$@";;
+    switch) execute "$@";;
+    *) echo -e "No such '${RED}$command${NC}' command."; usage ;;
+esac
+

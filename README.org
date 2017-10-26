@@ -1,0 +1,323 @@
+
+
+[[https://github.com/rycee/home-manager][home-manager]] is an excelent [[https://nixos.org/nix/][Nix]] based dotfile management system. Not only can
+it manage symlinks in your home-directory, as a package manager, it can also
+install the related software. Win!
+
+This project provides a wrapper around home-manager that makes it a little
+easier to use.
+
+My personal configuration used with home-manager-helper can be found [[https://github.com/dustinlacewell/dotfiles][here]].
+
+** Quickstart
+*** Install Nix
+
+Install the Nix package manager to your workstation:
+
+#+BEGIN_SRC shell
+  curl https://nixos.org/nix/install | sh
+#+END_SRC
+
+This will create ~/nix~ as well as some system-wide profile scripts which will
+integrate your shell with Nix.
+
+*** Install home-manager-helper
+
+Use ~nix-env~ to install the package straight from GitHub into your Nix profile:
+
+#+BEGIN_SRC shell
+  #> nix-env -i -f https://github.com/dustinlacewell/home-manager-helper/archive/master.tar.gz
+
+  downloading ‘https://github.com/dustinlacewell/dotfiles/archive/master.tar.gz’...
+  unpacking ‘https://github.com/dustinlacewell/dotfiles/archive/master.tar.gz’...
+  installing ‘home-manager-helper’
+  building path(s) ‘/nix/store/h1bb5hybayvkzbhg49kadd2s9irxrbxh-user-environment’
+  created 1 symlinks in user environment
+#+END_SRC
+
+*** First-run Bootstrap
+
+The ~hm~ command is now available. On the first run, it will install
+~home-manager~:
+
+#+BEGIN_SRC shell
+  #> hm
+  /Users/dustinlacewell/.nix-profile/bin/hm:hash:67: no such command: home-manager
+  Home-manager was not found. It will now be installed.
+  Press any key to continue...
+
+  downloading ‘https://github.com/rycee/home-manager/archive/master.tar.gz’... [0/0 KiB, 0.0 KiB/s]
+  unpacking ‘https://github.com/rycee/home-manager/archive/master.tar.gz’...
+  installing ‘home-manager’
+  these derivations will be built:
+    /nix/store/c8an7rvww7ykqh7nnc8cdzgnlgwgflkz-home-manager.drv
+  building path(s) ‘/nix/store/h4gjwiwqqm4db7qf0rpqr6711bjcdkli-home-manager’
+  installing
+  install: creating directory '/nix/store/h4gjwiwqqm4db7qf0rpqr6711bjcdkli-home-manager'
+  install: creating directory '/nix/store/h4gjwiwqqm4db7qf0rpqr6711bjcdkli-home-manager/bin'
+  '/nix/store/agb74b8gmwcfwlq1nk708vi6jrkvviwc-home-manager' -> '/nix/store/h4gjwiwqqm4db7qf0rpqr6711bjcdkli-home-manager/bin/home-manager'
+  building path(s) ‘/nix/store/wrfwl5rh0n3934wyj8pq7s79xc74a5df-user-environment’
+  created 3 symlinks in user environment
+
+  Bootstrap successful!
+#+END_SRC
+
+Woo.
+
+
+** Using hm
+
+~hm~ is super simple. It has two commands ~build~ and ~switch~. Both take a
+single argument, the name of an envfile.
+
+#+BEGIN_SRC text
+usage: hm <command> <env>
+
+Commands:
+build  - build env to ./result/
+switch - build env to ~/
+
+Environments:
+Loads ~/.home-manager/envs/<env>.nix
+#+END_SRC
+
+*** Building
+To perform a dry-run use the ~build~ command. It creates a ~./result/~
+directory with the files that would be symlinked into your home directory:
+
+#+BEGIN_SRC sh
+  #> hm build osx
+
+  ...
+#+END_SRC
+
+#+BEGIN_SRC sh
+  #> tree ./result/
+
+  ./result/
+  ├── activate
+  ├── home-files -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files
+  └── home-path -> /nix/store/2scx60dwvx9fvi55cwcjmg39gd2ymvvl-home-manager-path
+
+  2 directories, 1 file
+#+END_SRC
+
+*** Switching
+Once you're satisfied with the dry-run output, use the ~switch~ command to
+actually install symlinks into your home directory.
+
+#+BEGIN_SRC sh
+  #> hm switch osx
+
+  ...
+#+END_SRC
+
+#+BEGIN_SRC sh
+  #> find ~/ -type l -ls | grep "nix/store"
+
+  lrwxr-xr-x ~/.config/zsh/.zshenv -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.config/zsh/.zshenv
+  lrwxr-xr-x ~/.config/zsh/.zshrc -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.config/zsh/.zshrc
+  lrwxr-xr-x ~/.emacs.d/init.el -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.emacs.d/init.el
+  lrwxr-xr-x ~/.emacs.d/init.html -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.emacs.d/init.html
+  lrwxr-xr-x ~/.ssh/config -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.ssh/config
+  lrwxr-xr-x ~/.zshenv -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.zshenv
+#+END_SRC
+
+** Hello World!
+
+During the bootstrap, some example files were installed to your home directory:
+
+#+BEGIN_SRC text
+  #> tree ~/.home-manager
+
+  ├── envs
+  │   ├── example.nix
+  ├── hello
+  │   ├── default.nix
+  │   └── hello.conf
+#+END_SRC
+
+Go ahead and build a dry-run:
+
+#+BEGIN_SRC text
+  #> hm build example
+  /nix/store/fv3j0cn5np78wdl4bybfnb52mvqrrwjk-home-manager-generation
+#+END_SRC
+
+#+BEGIN_SRC text
+  #> tree result/
+
+  result/
+  ├── activate
+  ├── home-files -> /nix/store/cv68n6291xzdwqz3f7whlp3qg5vzm60g-home-manager-files
+  └── home-path -> /nix/store/sq9x4x0k5va4fwr7q91wk7w74fp8jv1k-home-manager-path
+#+END_SRC
+
+#+BEGIN_SRC text
+  ls -la result/home-files
+  lrwxr-xr-x  1 root  wheel  62 Dec 31  1969 result/home-files -> /nix/store/cv68n6291xzdwqz3f7whlp3qg5vzm60g-home-manager-files
+#+END_SRC
+
+Now go ahead and actually install these files to your home directory:
+
+#+BEGIN_SRC text
+  #> hm switch example
+  ,*** Downloading ‘https://cache.nixos.org/nar/0p2lrqwwy78m9i60zz4gnhbkhr461s39d75wq3zk901kcl8cw5ck.nar.xz’ (signed by ‘cache.nixos.org-1’) to ‘/nix/store/31hsbhw2y0x82yzim18rff4pvbp410f2-stdenv-darwin’...
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                   Dload  Upload   Total   Spent    Left  Speed
+  100  9348  100  9348    0     0   9348      0  0:00:01 --:--:--  0:00:01 76000
+
+  Starting home manager activation
+  Activating checkLinkTargets
+  Activating writeBoundary
+  Activating installPackages
+  installing ‘home-manager-path’
+  building path(s) ‘/nix/store/b1ag2rsy281525xsg3rka0v3j7hn1k6v-user-environment’
+  created 26 symlinks in user environment
+  Activating linkGeneration
+  No change so reusing latest profile generation 168
+  Cleaning up orphan links from /Users/dustinlacewell
+#+END_SRC
+
+#+BEGIN_SRC text
+  #> cat ~/.hello.conf
+
+  This doesn't do anything!
+#+END_SRC
+
+#+BEGIN_SRC text
+  #> hello
+
+  Hello, World!
+#+END_SRC
+
+Woo.
+** Protect your Secrets
+
+So that you don't need to keep secrets in your configuration ~hm~ will source
+~$HOME/.secrets~. This file should export any environment variables that you
+utilize while building your configuration.
+
+This file should probably not directly contain your secrets. We recommend
+instead, utilizing a a tool to manage your secrets. The tool can be used to
+interpolate secret values when the file is sourced. Some options might be:
+
+  - GNU Pass: https://www.passwordstore.org/
+  - Mozilla SOPS: https://github.com/mozilla/sops
+  - LastPass CLI: https://github.com/lastpass/lastpass-cli
+
+** Plugins
+
+Plugins are defined in ~$HOME/.home-manager/plugins.nix~.
+
+This expression contains a simple attrset. Each attribute is the name of a
+plugin. Its value should be a NixOS package. The package can be fetched
+dynamically using any of the following helpers:
+
+#+BEGIN_SRC text
+  pkgs.fetchFromBitbucket  pkgs.fetchFromGitHub
+  pkgs.fetchFromGitLab     pkgs.fetchFromRepoOrCz
+  pkgs.fetchFromSavannah   pkgs.fetchHex
+  pkgs.fetchMavenArtifact  pkgs.fetchNuGet
+  pkgs.fetchRepoProject    pkgs.fetchadc
+  pkgs.fetchbower          pkgs.fetchbzr
+  pkgs.fetchcvs            pkgs.fetchdarcs
+  pkgs.fetchegg            pkgs.fetchfossil
+  pkgs.fetchgit            pkgs.fetchgitLocal
+  pkgs.fetchgitPrivate     pkgs.fetchgitrevision
+  pkgs.fetchgx             pkgs.fetchhg
+  pkgs.fetchmail           pkgs.fetchmtn
+  pkgs.fetchpatch          pkgs.fetchs3
+  pkgs.fetchsvn            pkgs.fetchsvnrevision
+  pkgs.fetchsvnssh         pkgs.fetchurl
+  pkgs.fetchurlBoot        pkgs.fetchzip
+#+END_SRC
+
+
+** Envfiles
+Envfiles are a top-level Nix expressions that live in ~$HOME/.config/nixpkgs/envs/~.
+
+Their job is to import the other expressions which make up the environment. You
+can have multiple envfiles, one for each unique environment. Take look at
+~envs/osx.nix~ to see how I write mine:
+
+#+BEGIN_SRC nix
+  {
+    imports = [
+      ../src/ssh
+      ../src/emacs
+      ../src/zsh
+      ../src/httpie
+      ../src/aws
+      ../src/fasd
+    ];
+  }
+#+END_SRC
+
+The expression is an attrset. The only attribute is ~imports~ set to a list of
+paths of other expressions to load.
+
+** Expression Sources
+Expression Sources are Nix expressions that actually make up your
+configuration. I organize these underneath ~$HOME/.config/nixpkgs/src/~. For
+each tool I typically create a folder with a ~default.nix~ and any data files.
+
+This is ~src/emacs/default.nix~ at the time of this writing:
+
+#+BEGIN_SRC nix
+  { pkgs, ... }: ①
+
+  let
+    plugins = import <plugins>; ②
+
+  in {
+    imports = [ ③
+      plugins.org-build
+      plugins.org-export
+    ];
+
+    programs.emacs = { enable = true; }; ④
+
+    home.file.".emacs.d/init.el".source = pkgs.org-build { ⑤
+      source = ./init.org;
+    };
+
+    home.file.".emacs.d/init.html".source = pkgs.org-export { ⑥
+      source = ./init.org;
+      user = "dustinlacewell";
+      repo = "emacs.d";
+    };
+  }
+#+END_SRC
+
+*** ① Module function
+The module is expressed as a function that accepts ~pkgs~ and returns an attrset.
+
+*** ② Import plugins.nix
+The expression at ~$HOME/.config/nixpkgs/plugins.nix~ is imported so that we
+can refer to the plugin packages.
+
+*** ③ Add plugins to imports
+One of the attributes of our module's returned attrset is ~imports~. This takes
+a list of modules that should be merged by the module system. This has the
+effect of making available any Options declared or defined by the plugins. It
+also makes any package overrides provided by the plugins available under
+~pkgs~.
+
+*** ④ Install Emacs
+This line declares the ~programs.emacs.enable~ option to be true. This will
+ensure Emacs gets installed the Nix profile.
+
+*** ⑤ Build init.org
+Emacs configuration is done with Emacs-Lisp. But I choose to write my
+configuration as an Orgmode document. This section calls ~pkgs.org-build~
+function which builds an Orgmode document into Emacs-Lisp. This returns the
+path of the built ~.el~ file in the store. We assign that to
+~home.file.".emacs.d/init.el".source~ which will cause the file to be symlinked
+into our home directory.
+
+*** ⑥ Export init.org
+Similar to ⑤ this calls a plugin function. This time it is ~pkgs.org-export~
+which builds ~init.org~ as HTML. This line writes out the HTML file to
+~.emacs.d/init.html~ but ~org-export~ will also publish the HTML file to
+http://dustinlacewell.github.com/emacs.d/
