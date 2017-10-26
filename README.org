@@ -78,8 +78,6 @@ The ~hm~ command is now available. On the first run, it will install
 #+END_SRC
 
 Woo.
-
-
 ** Using hm
 
 ~hm~ is super simple. It has two commands ~build~ and ~switch~. Both take a
@@ -95,49 +93,6 @@ switch - build env to ~/
 Environments:
 Loads ~/.home-manager/envs/<env>.nix
 #+END_SRC
-
-*** Building
-To perform a dry-run use the ~build~ command. It creates a ~./result/~
-directory with the files that would be symlinked into your home directory:
-
-#+BEGIN_SRC sh
-  #> hm build osx
-
-  ...
-#+END_SRC
-
-#+BEGIN_SRC sh
-  #> tree ./result/
-
-  ./result/
-  ├── activate
-  ├── home-files -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files
-  └── home-path -> /nix/store/2scx60dwvx9fvi55cwcjmg39gd2ymvvl-home-manager-path
-
-  2 directories, 1 file
-#+END_SRC
-
-*** Switching
-Once you're satisfied with the dry-run output, use the ~switch~ command to
-actually install symlinks into your home directory.
-
-#+BEGIN_SRC sh
-  #> hm switch osx
-
-  ...
-#+END_SRC
-
-#+BEGIN_SRC sh
-  #> find ~/ -type l -ls | grep "nix/store"
-
-  lrwxr-xr-x ~/.config/zsh/.zshenv -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.config/zsh/.zshenv
-  lrwxr-xr-x ~/.config/zsh/.zshrc -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.config/zsh/.zshrc
-  lrwxr-xr-x ~/.emacs.d/init.el -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.emacs.d/init.el
-  lrwxr-xr-x ~/.emacs.d/init.html -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.emacs.d/init.html
-  lrwxr-xr-x ~/.ssh/config -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.ssh/config
-  lrwxr-xr-x ~/.zshenv -> /nix/store/5x3dxzivrnh0lks5sc3fgfkcg4884xb1-home-manager-files/.zshenv
-#+END_SRC
-
 ** Hello World!
 
 During the bootstrap, some example files were installed to your home directory:
@@ -247,7 +202,6 @@ dynamically using any of the following helpers:
   pkgs.fetchsvnssh         pkgs.fetchurl
   pkgs.fetchurlBoot        pkgs.fetchzip
 #+END_SRC
-
 
 ** Envfiles
 Envfiles are a top-level Nix expressions that live in ~$HOME/.home-manager/envs/~.
