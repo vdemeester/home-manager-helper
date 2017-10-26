@@ -250,7 +250,7 @@ dynamically using any of the following helpers:
 
 
 ** Envfiles
-Envfiles are a top-level Nix expressions that live in ~$HOME/.config/nixpkgs/envs/~.
+Envfiles are a top-level Nix expressions that live in ~$HOME/.home-manager/envs/~.
 
 Their job is to import the other expressions which make up the environment. You
 can have multiple envfiles, one for each unique environment. Take look at
@@ -274,7 +274,7 @@ paths of other expressions to load.
 
 ** Expression Sources
 Expression Sources are Nix expressions that actually make up your
-configuration. I organize these underneath ~$HOME/.config/nixpkgs/src/~. For
+configuration. I organize these underneath ~$HOME/.home-manager/src/~. For
 each tool I typically create a folder with a ~default.nix~ and any data files.
 
 This is ~src/emacs/default.nix~ at the time of this writing:
@@ -309,7 +309,7 @@ This is ~src/emacs/default.nix~ at the time of this writing:
 The module is expressed as a function that accepts ~pkgs~ and returns an attrset.
 
 *** ② Import plugins.nix
-The expression at ~$HOME/.config/nixpkgs/plugins.nix~ is imported so that we
+The expression at ~$HOME/.home-manager/plugins.nix~ is imported so that we
 can refer to the plugin packages.
 
 *** ③ Add plugins to imports
