@@ -1,3 +1,18 @@
+#+TITLE: home-manager-helper
+#+AUTHOR: Dustin Lacewell
+#+email: dlacewell at gmail dot com
+#+DESCRIPTION: A literate programming style exposition of my Emacs configuration
+#+LANGUAGE: en
+#+STARTUP: overview indent align
+#+BABEL: :cache no
+#+OPTIONS: ^:nil num:nil tags:nil
+#+SETUPFILE: assets/readtheorg.setup
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
+#+HTML_HEAD: <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+#+HTML_HEAD: <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="https://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="https://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
 
 
 [[https://github.com/rycee/home-manager][home-manager]] is an excelent [[https://nixos.org/nix/][Nix]] based dotfile management system. Not only can

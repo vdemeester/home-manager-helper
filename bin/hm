@@ -79,8 +79,6 @@ function execute {
     # pull in user's secrets
     source ~/.secrets
 
-    echo "EnvFile: $envfile"
-    echo "Command: $command"
     home-manager -f $envfile $command
 }
 
