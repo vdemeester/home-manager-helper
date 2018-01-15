@@ -87,12 +87,12 @@ function execute {
 
     # plugin support
     local HM_PATH="${HM_PATH:-https://github.com/hmpkgs/hmpkgs/archive/master.tar.gz}"
-    export NIX_PATH="plugins=$HM_PATH:$NIX_PATH";
+    export NIX_PATH="hmpkgs=$HM_PATH:$NIX_PATH";
 
     # pull in user's secrets
     source ~/.secrets
 
-    home-manager -f $envfile $command
+    home-manager -v -f $envfile $command
 }
 
 hash home-manager || {
