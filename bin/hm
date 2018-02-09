@@ -86,7 +86,7 @@ function execute {
     fi
 
     # plugin support
-    local HM_PATH="${HM_PATH:-https://github.com/hmpkgs/hmpkgs/archive/master.tar.gz?1}"
+    local HM_PATH="${HM_PATH:-https://github.com/hmpkgs/hmpkgs/archive/master.tar.gz?}$(date +%s)"
     export NIX_PATH="hmpkgs=$HM_PATH:$NIX_PATH";
 
     # pull in user's secrets
