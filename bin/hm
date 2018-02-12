@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 PREFIX="$HOME/"${HM_HOME:-.home-manager}
 
@@ -86,10 +86,12 @@ function execute {
     fi
 
     # plugin support
-    local HM_PATH="${HM_PATH:$HOME/.home-manager/hmpkgs}"
-    local NIXPKGS_PATH="${NIXPKGS_PATH:$HOME/.home-manager/nixpkgs}"
-    export NIX_PATH="nixpkgs=$NIXPKGS_PATH:hmpkgs=$HM_PATH:$NIX_PATH";
-
+    local HMPKGS_DEFAULT="$HOME/.home-manager/hmpkgs"
+    local HMPKGS_PATH="${HM_PATH:-$HMPKGS_DEFAULT}"
+    local NIXPKGS_DEFAULT="$HOME/.home-manager/nixpkgs"
+    local NIXPKGS_PATH="${NIXPKGS_PATH:-$NIXPKGS_DEFAULT}"
+    export NIX_PATH="nixpkgs=$NIXPKGS_PATH:hmpkgs=$HMPKGS_PATH:$NIX_PATH";
+    echo "NIX_PATH: $NIX_PATH"
     # pull in user's secrets
     source ~/.secrets
 
@@ -107,11 +109,11 @@ if [[ $# -eq 0 ]] ; then
     quit-with-help
 fi
 
-local command="$1"; shift
+command="$1"; shift
 
 case "$command" in
     build)  execute "$@";;
     switch) execute "$@";;
-    *) echo -e "No such '${RED}$command${NC}' command."; usage ;;
+    *) echo -e "No such '${RED}$command${NC}' command."; quit-with-help ;;
 esac
 
