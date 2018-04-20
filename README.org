@@ -41,10 +41,10 @@ integrate your shell with Nix.
 Use ~nix-env~ to install the package straight from GitHub into your Nix profile:
 
 #+BEGIN_SRC shell
-  #> nix-env -i -f https://github.com/dustinlacewell/home-manager-helper/archive/master.tar.gz
+  #> nix-env -i -f https://github.com/vdemeester/home-manager-helper/archive/master.tar.gz
 
-  downloading ‘https://github.com/dustinlacewell/dotfiles/archive/master.tar.gz’...
-  unpacking ‘https://github.com/dustinlacewell/dotfiles/archive/master.tar.gz’...
+  downloading ‘https://github.com/vdemeester/dotfiles/archive/master.tar.gz’...
+  unpacking ‘https://github.com/vdemeester/dotfiles/archive/master.tar.gz’...
   installing ‘home-manager-helper’
   building path(s) ‘/nix/store/h1bb5hybayvkzbhg49kadd2s9irxrbxh-user-environment’
   created 1 symlinks in user environment
@@ -57,7 +57,7 @@ The ~hm~ command is now available. On the first run, it will install
 
 #+BEGIN_SRC shell
   #> hm
-  /Users/dustinlacewell/.nix-profile/bin/hm:hash:67: no such command: home-manager
+  /Users/vdemeester/.nix-profile/bin/hm:hash:67: no such command: home-manager
   Home-manager was not found. It will now be installed.
   Press any key to continue...
 
@@ -91,14 +91,14 @@ build  - build env to ./result/
 switch - build env to ~/
 
 Environments:
-Loads ~/.home-manager/envs/<env>.nix
+Loads ~/.config/home-manager/envs/<env>.nix
 #+END_SRC
 ** Hello World!
 
 During the bootstrap, some example files were installed to your home directory:
 
 #+BEGIN_SRC text
-  #> tree ~/.home-manager
+  #> tree ~/.config/home-manager
 
   ├── envs
   │   ├── example.nix
@@ -146,7 +146,7 @@ Now go ahead and actually install these files to your home directory:
   created 26 symlinks in user environment
   Activating linkGeneration
   No change so reusing latest profile generation 168
-  Cleaning up orphan links from /Users/dustinlacewell
+  Cleaning up orphan links from /Users/vdemeester
 #+END_SRC
 
 #+BEGIN_SRC text
@@ -165,7 +165,7 @@ Woo.
 ** Protect your Secrets
 
 So that you don't need to keep secrets in your configuration ~hm~ will source
-~$HOME/.secrets~. This file should export any environment variables that you
+~$HOME/.config/secrets~. This file should export any environment variables that you
 utilize while building your configuration.
 
 This file should probably not directly contain your secrets. We recommend
@@ -178,7 +178,7 @@ interpolate secret values when the file is sourced. Some options might be:
 
 ** Plugins
 
-Plugins are defined in ~$HOME/.home-manager/plugins.nix~.
+Plugins are defined in ~$HOME/.config/home-manager/plugins.nix~.
 
 This expression contains a simple attrset. Each attribute is the name of a
 plugin. Its value should be a NixOS package. The package can be fetched
@@ -204,7 +204,7 @@ dynamically using any of the following helpers:
 #+END_SRC
 
 ** Envfiles
-Envfiles are a top-level Nix expressions that live in ~$HOME/.home-manager/envs/~.
+Envfiles are a top-level Nix expressions that live in ~$HOME/.config/home-manager/envs/~.
 
 Their job is to import the other expressions which make up the environment. You
 can have multiple envfiles, one for each unique environment. Take look at
@@ -253,7 +253,7 @@ This is ~src/emacs/default.nix~ at the time of this writing:
 
     home.file.".emacs.d/init.html".source = pkgs.org-export { ⑥
       source = ./init.org;
-      user = "dustinlacewell";
+      user = "vdemeester";
       repo = "emacs.d";
     };
   }
@@ -263,7 +263,7 @@ This is ~src/emacs/default.nix~ at the time of this writing:
 The module is expressed as a function that accepts ~pkgs~ and returns an attrset.
 
 *** ② Import plugins.nix
-The expression at ~$HOME/.home-manager/plugins.nix~ is imported so that we
+The expression at ~$HOME/.config/home-manager/plugins.nix~ is imported so that we
 can refer to the plugin packages.
 
 *** ③ Add plugins to imports

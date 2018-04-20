@@ -21,7 +21,7 @@ build  - build env to ./result/
 switch - build env to ~/
 
 Environments:
-Loads ~/.config/nixpkgs/envs/<env>.nix
+Loads ~/.config/home-manager/envs/<env>.nix
 
 EOF
 
@@ -30,7 +30,7 @@ EOF
 
 function renderExamples {
     test -e "$PREFIX" && {
-	echo "$HOME/.home-manager is already present, skiping examples"
+	echo "$PREFIX is already present, skiping examples"
 	return 0
     }
     mkdir -p "$PREFIX/envs"
@@ -98,7 +98,7 @@ function execute {
     export NIX_PATH="nixpkgs=$NIXPKGS_PATH:hmpkgs=$HMPKGS_PATH:$NIX_PATH";
     echo "NIX_PATH: $NIX_PATH"
     # pull in user's secrets
-    source ~/.secrets
+    source ~/config/secrets
 
     home-manager -v -f $envfile $command
 }
