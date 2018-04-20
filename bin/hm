@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PREFIX="$HOME/"${HM_HOME:-.home-manager}
+PREFIX="$HOME/"${HM_HOME:-.config/home-manager}
 
 
 # colors
@@ -29,6 +29,10 @@ EOF
 }
 
 function renderExamples {
+    test -e "$PREFIX" && {
+	echo "$HOME/.home-manager is already present, skiping examples"
+	return 0
+    }
     mkdir -p "$PREFIX/envs"
     mkdir -p "$PREFIX/hello"
 
@@ -47,7 +51,8 @@ function renderExamples {
 
 function bootstrap {
     # install home-manager
-    nix-env -iA home-manager -f https://github.com/rycee/home-manager/archive/master.tar.gz
+    mkdir -p $HOME/.local/src
+    git clone https://github.com/rycee/home-manager $HOME/.local/src/home-manager
 
     if [ ! -d /nix/var/nix/profiles/per-user/$user ] || [ ! -d /nix/var/nix/profiles/per-user/$user ]; then
         echo "\nThe Nix installer doesn't setup multi-user gc-roots for some reason!"
