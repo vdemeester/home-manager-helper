@@ -53,6 +53,7 @@ function bootstrap {
     # install home-manager
     mkdir -p $HOME/.local/src
     git clone https://github.com/rycee/home-manager $HOME/.local/src/home-manager
+    nix-env -iA home-manager -f $HOME/.local/src/home-manager
 
     if [ ! -d /nix/var/nix/profiles/per-user/$user ] || [ ! -d /nix/var/nix/profiles/per-user/$user ]; then
         echo "\nThe Nix installer doesn't setup multi-user gc-roots for some reason!"
