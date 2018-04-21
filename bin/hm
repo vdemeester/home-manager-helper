@@ -92,11 +92,9 @@ function execute {
     fi
 
     # plugin support
-    local HMPKGS_DEFAULT="$HOME/.home-manager/hmpkgs"
+    local HMPKGS_DEFAULT="$HOME/.config/home-manager/hmpkgs"
     local HMPKGS_PATH="${HM_PATH:-$HMPKGS_DEFAULT}"
-    local NIXPKGS_DEFAULT="$HOME/.home-manager/nixpkgs"
-    local NIXPKGS_PATH="${NIXPKGS_PATH:-$NIXPKGS_DEFAULT}"
-    export NIX_PATH="nixpkgs=$NIXPKGS_PATH:hmpkgs=$HMPKGS_PATH:$NIX_PATH";
+    export NIX_PATH="hmpkgs=$HMPKGS_PATH:home-manager=$HOME/.local/src/home-manager:$NIX_PATH";
     echo "NIX_PATH: $NIX_PATH"
     # pull in user's secrets
     source ~/config/secrets
@@ -120,6 +118,7 @@ command="$1"; shift
 case "$command" in
     build)  execute "$@";;
     switch) execute "$@";;
-    *) echo -e "No such '${RED}$command${NC}' command."; quit-with-help ;;
+    news)   execute "$@";;
+    *)      echo -e "No such '${RED}$command${NC}' command."; quit-with-help ;;
 esac
 
