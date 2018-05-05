@@ -51,9 +51,7 @@ function renderExamples {
 
 function bootstrap {
     # install home-manager
-    mkdir -p $HOME/.local/src
-    git clone https://github.com/rycee/home-manager $HOME/.local/src/home-manager
-    nix-env -iA home-manager -f $HOME/.local/src/home-manager
+    echo "Make sure your configuration in $PREFIX has home-manager submodule (pkgs/home-manager)"
 
     if [ ! -d /nix/var/nix/profiles/per-user/$user ] || [ ! -d /nix/var/nix/profiles/per-user/$user ]; then
         echo "\nThe Nix installer doesn't setup multi-user gc-roots for some reason!"
@@ -94,7 +92,7 @@ function execute {
     # plugin support
     local HMPKGS_DEFAULT="$HOME/.config/home-manager/hmpkgs"
     local HMPKGS_PATH="${HM_PATH:-$HMPKGS_DEFAULT}"
-    export NIX_PATH="hmpkgs=$HMPKGS_PATH:home-manager=$HOME/.local/src/home-manager:$NIX_PATH";
+    export NIX_PATH="hmpkgs=$HMPKGS_PATH:home-manager=$PREFIX/pkgs/home-manager:$NIX_PATH";
     echo "NIX_PATH: $NIX_PATH"
     # pull in user's secrets
     source ~/config/secrets
